@@ -18,6 +18,7 @@ library(here)
 library(plotly)
 library(DT)
 library(lubridate)
+library(ggridges)
 ```
 
 Step 2. Read in lobster file + make it tidy
@@ -28,5 +29,85 @@ lobster_tidy <- lobster_raw %>%
   clean_names() %>%
   tidyr::uncount(count) %>% 
   select(year:size_mm)
+```
+
+Potential Histogram
+```{r}
+ggplot(lobster_tidy, aes(x = year)) +
+  geom_histogram(data = transform(lobster_tidy, site = NULL), binwidth = 1, fill = "gray90") + 
+  geom_histogram(binwidth = 1,
+                 aes(fill = site),
+                 show.legend = FALSE) +
+  facet_wrap(~site)+
+  theme_light()+
+  labs(x = "Year",
+       y = "Lobster Count",
+       title = "MAKE A REALLY AWESOME COOL TITLE")
+```
+
+
+Results B.
+
+Visually explore lobster size distribution shifts
+Compare lobster sizes in 2012 and 2018
+
+```{r}
+lobster_12_18 <- lobster_tidy %>% 
+  filter(year %in% c(2012, 2018))
+```
+
+Visually explore the size distributions for lobsters observed at the 5 different sites in 2012, and in 2018
+(i.e. you will have a total of 10 size distributions shown: for each of the 5 sites, one for 2012 and one for 2018).
+```{r}
+lobster_size <- lobster_12_18 %>% 
+  select(year, site, size_mm)
+```
+
+
+```{r}
+
+ggplot(lobster_size, aes(x = size_mm, y = site)) +
+  geom_density_ridges(aes(fill = site),
+                      show.legend = FALSE)+
+  facet_wrap(~year) +
+  scale_x_continuous(limits = c(30, 135),
+                     expand = c(0,0)) +
+  theme_light()+
+  labs(x = "Lobster Size (mm)",
+       y = "Site",
+       title = "WRITE A TOTALLY RADTASTIC TITLE")
+
+```
+
+Make a finalized graph showing community size distributions at each site in the 2 years, allowing the reader to easily interpret distribution shifts. Add a figure caption below the graph. 
+
+
+---
+
+Things that really didn't work but might be useful later...
+
+```{r}
+ggplot(lobster_size, aes(x = size_mm)) +
+  geom_histogram(aes(fill = year,
+                 show.legend = FALSE)) +
+  facet_wrap(~site)+
+  facet_wrap(~year)+
+  labs(title = "Temperature Histogram") +
+  theme_light()
+```
+
+```{r}
+lobster_count <- lobster_raw %>% 
+  clean_names() %>%
+  group_by(year)
+
+lobster_3a <- lobster_tidy %>% 
+  select(date, site) %>% 
+  group_by(site) %>% 
+  count(date)
+
+ggplot(lobster_3a, aes(x = date, y = n))+
+  geom_line()+
+  facet_wrap(~site)
 ```
 
