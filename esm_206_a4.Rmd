@@ -33,8 +33,18 @@ lobster_tidy <- lobster_raw %>%
 
 Potential Histogram
 ```{r}
-ggplot(lobster_tidy, aes(x = year)) +
-  geom_histogram(data = transform(lobster_tidy, site = NULL), binwidth = 1, fill = "gray90") + 
+lobster_abund <- lobster_tidy
+
+# Change site variable names from abreviations to full spelling
+lobster_abund$site <- gsub("IVEE", "Isla Vista", lobster_abund$site)
+lobster_abund$site <- gsub("NAPL", "Naples", lobster_abund$site)
+lobster_abund$site <- gsub("AQUE", "Arroyo Quemado", lobster_abund$site)
+lobster_abund$site <- gsub("CARP", "Carpinteria", lobster_abund$site)
+lobster_abund$site <- gsub("MOHK", "Mohawk", lobster_abund$site)
+
+# Make a graph
+ggplot(lobster_abund, aes(x = year)) +
+  geom_histogram(data = transform(lobster_abund, site = NULL), binwidth = 1, fill = "gray90") + 
   geom_histogram(binwidth = 1,
                  aes(fill = site),
                  show.legend = FALSE) +
@@ -42,7 +52,7 @@ ggplot(lobster_tidy, aes(x = year)) +
   theme_light()+
   labs(x = "Year",
        y = "Lobster Count",
-       title = "MAKE A REALLY AWESOME COOL TITLE")
+       title = "Lobster Abundance Across Five Sites")
 ```
 
 
@@ -61,6 +71,13 @@ Visually explore the size distributions for lobsters observed at the 5 different
 ```{r}
 lobster_size <- lobster_12_18 %>% 
   select(year, site, size_mm)
+
+# Change site variable names from abreviations to full spelling
+lobster_size$site <- gsub("IVEE", "Isla Vista", lobster_size$site)
+lobster_size$site <- gsub("NAPL", "Naples", lobster_size$site)
+lobster_size$site <- gsub("AQUE", "Arroyo Quemado", lobster_size$site)
+lobster_size$site <- gsub("CARP", "Carpinteria", lobster_size$site)
+lobster_size$site <- gsub("MOHK", "Mohawk", lobster_size$site)
 ```
 
 
