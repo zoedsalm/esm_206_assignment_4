@@ -5,8 +5,8 @@ date: "11/6/2019"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE, include = FALSE)
 ```
 
 Step 1. Attach necessary libraries
@@ -43,7 +43,7 @@ lobster_abund$site <- gsub("CARP", "Carpinteria", lobster_abund$site)
 lobster_abund$site <- gsub("MOHK", "Mohawk", lobster_abund$site)
 
 # Make a graph
-ggplot(lobster_abund, aes(x = year)) +
+site_abundance_graph <- ggplot(lobster_abund, aes(x = year)) +
   geom_histogram(data = transform(lobster_abund, site = NULL), binwidth = 1, fill = "gray90") + 
   geom_histogram(binwidth = 1,
                  aes(fill = site),
@@ -52,7 +52,11 @@ ggplot(lobster_abund, aes(x = year)) +
   theme_light()+
   labs(x = "Year",
        y = "Lobster Count",
-       title = "Lobster Abundance Across Five Sites")
+       title = "Lobster Abundance Across Five Sites(Duerksen-Salm & Nolan)", 
+       subtitle = "Abundance across five studied site compared to total total lobsters counted across all sites")
+## I dont like this caption but we need to talk about what the shaded area means
+(site_abundance_graph)
+
 ```
 
 
@@ -92,7 +96,9 @@ ggplot(lobster_size, aes(x = size_mm, y = site)) +
   theme_light()+
   labs(x = "Lobster Size (mm)",
        y = "Site",
-       title = "WRITE A TOTALLY RADTASTIC TITLE")
+       title = "Change in lobster size by site")
+# Change in distribution of lobster size
+# Change in lobster size by site
 
 ```
 
@@ -109,7 +115,9 @@ ggplot(lobster_size, aes(x = size_mm)) +
                  show.legend = FALSE)) +
   facet_wrap(~site)+
   facet_wrap(~year)+
-  labs(title = "Temperature Histogram") +
+  labs(title = "Temperature Histogram", 
+       y = "Lobster Count", 
+       x = "Lobster Size (mm)") +
   theme_light()
 ```
 
