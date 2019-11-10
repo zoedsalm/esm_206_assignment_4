@@ -136,3 +136,5 @@ ggplot(lobster_3a, aes(x = date, y = n))+
   facet_wrap(~site)
 ```
 
+## Results C. Compare mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018 
+- MPAs: IV and Naples (establish 2012)
