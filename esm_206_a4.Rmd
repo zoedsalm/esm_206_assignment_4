@@ -1,5 +1,5 @@
 ---
-title: "esm_206_assignment_4"
+title: "ESM 206: Assignment 4"
 author: "Zoe Duerksen-Salm & Audrey Nolan"
 date: "11/6/2019"
 output: html_document
@@ -142,3 +142,21 @@ ggplot(lobster_3a, aes(x = date, y = n))+
 
 ## Results C. Compare mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018 
 - MPAs: IV and Naples (establish 2012)
+
+For each year (2012 and 2018) consolidate the size observations into only two groups: MPA and non-MPA lobsters.
+
+```{r}
+# Manipulate df to indicate MPA or non-MPA status. Filter df to include only 2012 + 2018 observations.
+
+lobster_protection <- lobster_tidy %>% 
+  mutate(protection = ifelse(site %in% c("IVEE, NAPL"), "MPA", "non-MPA")) %>% 
+  filter(year == c(2012, 2018))
+```
+
+For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+
+For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+
+For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+
+For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
