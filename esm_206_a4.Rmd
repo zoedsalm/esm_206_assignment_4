@@ -58,11 +58,10 @@ site_abundance_graph <- ggplot(lobster_abund, aes(x = year)) +
        y = "Lobster Count",
        title = "Lobster Abundance Across Five Sites(Duerksen-Salm & Nolan)", 
        subtitle = "Abundance across five studied site compared to total total lobsters counted across all sites")
-## I dont like this caption but we need to talk about what the shaded area means
+## I dont like this caption but we need to talk about what the shaded area means / if the shaded area is necessary? 
 (site_abundance_graph)
 
 ```
-
 
 Results B.
 
@@ -108,7 +107,6 @@ ggplot(lobster_size, aes(x = size_mm, y = site)) +
 
 Make a finalized graph showing community size distributions at each site in the 2 years, allowing the reader to easily interpret distribution shifts. Add a figure caption below the graph. 
 
-
 ---
 
 Things that really didn't work but might be useful later...
@@ -149,14 +147,30 @@ For each year (2012 and 2018) consolidate the size observations into only two gr
 # Manipulate df to indicate MPA or non-MPA status. Filter df to include only 2012 + 2018 observations.
 
 lobster_protection <- lobster_tidy %>% 
-  mutate(protection = ifelse(site %in% c("IVEE, NAPL"), "MPA", "non-MPA")) %>% 
-  filter(year == c(2012, 2018))
+  mutate(protection = ifelse(site %in% c("IVEE", "NAPL"), "MPA", "non-MPA")) %>% 
+  filter(year == c(2012, 2018)) %>% 
+  select("year", "site", "size_mm", "protection") %>% 
+  group_by(year) %>% 
+  group_by(site) %>%
+  mutate(mean_size = mean(size_mm)) ## Need to select only the means calculated for each site at 2012 + 2018
+
+# Graphing MPA vs. Non-MPA
+# I wanted to do a boxplot for each site but boxplots use medians, not means like she asked :(
+# I dont like this first one but leaving it for later
+
+ggplot(lobster_protection, aes(x = mean_size, y = site)) +
+  geom_density_ridges(aes(fill = site),
+                      show.legend = FALSE)+
+  facet_wrap(~protection) +
+  scale_x_continuous(limits = c(0, 135),
+                     expand = c(0,0))
+
+ggplot(lobster_protection, aes(x = site, y = mean_size))+
+  geom_col(aes(fill = site),
+           show.legend = FALSE)
+
 ```
-
-For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
-
-For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
-
-For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
-
-For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+- For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+- For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+- For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+- For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018? 
