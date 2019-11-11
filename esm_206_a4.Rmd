@@ -6,11 +6,14 @@ output: html_document
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE, include = FALSE)
+knitr::opts_chunk$set(echo = TRUE,
+                      message = FALSE,
+                      warning = FALSE)
 ```
 
-Step 1. Attach necessary libraries
 ```{r}
+# Attach libraries
+
 library(tidyverse)
 library(tidyr)
 library(janitor)
@@ -21,8 +24,9 @@ library(lubridate)
 library(ggridges)
 ```
 
-Step 2. Read in lobster file + make it tidy
 ```{r}
+#Read in lobster file + make it tidy
+
 lobster_raw <- read_csv("lobster_abundance_sbc_lter.csv", na = "-99999")
 
 lobster_tidy <- lobster_raw %>% 
