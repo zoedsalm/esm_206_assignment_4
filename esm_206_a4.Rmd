@@ -176,9 +176,20 @@ Mean size (mm) for MPA sites (`r round(protection_2012$estimate[1],2)`) and non-
 
 For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
 ```{r}
-protection_2018 <- lobster_protection %>% 
-  filter(year == 2018)
+MPA_2018 <- lobster_protection %>% 
+  filter(year == 2018, 
+         protection == "MPA")
+
+nonMPA_2018 <- lobster_protection %>% 
+  filter(year == 2018, 
+         protection == "non-MPA")
+
+protection_2018 <- t.test(MPA_2018$size_mm, nonMPA_2018$size_mm)
+protection_2018
+
 ```
+
+Mean size (mm) for 2018 MPA sites (`r round(MPA_2018$estimate[1],2)`) and non-MPA sites (`r round(nonMPA_2018$estimate[2],2)`) in the year differ significantly (t(`r round(protection_2018$parameter,2)`) = (`r round(protection_2018$statistic,2)`, *p* = (`r round(protection_2018$p.value,2)`).
 
 For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
 ```{r}
