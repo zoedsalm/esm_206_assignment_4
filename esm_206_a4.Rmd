@@ -149,28 +149,55 @@ For each year (2012 and 2018) consolidate the size observations into only two gr
 lobster_protection <- lobster_tidy %>% 
   mutate(protection = ifelse(site %in% c("IVEE", "NAPL"), "MPA", "non-MPA")) %>% 
   filter(year == c(2012, 2018)) %>% 
-  select("year", "site", "size_mm", "protection") %>% 
-  group_by(year) %>% 
-  group_by(site) %>%
-  mutate(mean_size = mean(size_mm)) ## Need to select only the means calculated for each site at 2012 + 2018
-
-# Graphing MPA vs. Non-MPA
-# I wanted to do a boxplot for each site but boxplots use medians, not means like she asked :(
-# I dont like this first one but leaving it for later
-
-ggplot(lobster_protection, aes(x = mean_size, y = site)) +
-  geom_density_ridges(aes(fill = site),
-                      show.legend = FALSE)+
-  facet_wrap(~protection) +
-  scale_x_continuous(limits = c(0, 135),
-                     expand = c(0,0))
-
-ggplot(lobster_protection, aes(x = site, y = mean_size))+
-  geom_col(aes(fill = site),
-           show.legend = FALSE)
+  select("year", "site", "size_mm", "protection") #%>% 
+  #group_by(year) %>% 
+  #group_by(site) %>%
+  #mutate(mean_size = mean(size_mm)) ## Need to select only the means calculated for each site at 2012 + 2018
 
 ```
-- For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
-- For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
-- For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
-- For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018? 
+ 
+For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+```{r}
+MPA_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "MPA")
+
+nonMPA_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "non-MPA")
+
+protection_2012 <- t.test(MPA_2012$size_mm, nonMPA_2012$size_mm)
+protection_2012
+
+```
+
+Mean size (mm) for MPA sites (`r round(protection_2012$estimate[1],2)`) and non-MPA sites (`r round(protection_2012$estimate[2],2)`) in the year 2012 differ significantly (t(`r round(protection_2012$parameter,2)`) = (`r round(protection_2012$statistic,2)`, *p* = (`r round(protection_2012$p.value,2)`).
+
+
+For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
+```{r}
+protection_2018 <- lobster_protection %>% 
+  filter(year == 2018)
+```
+
+For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
+```{r}
+MPA_all_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "MPA")
+
+MPA_all_2018 <- lobster_protection %>% 
+  filter(year == 2018,
+         protection == "MPA")
+```
+
+For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018? 
+```{r}
+nonMPA_all_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "non-MPA")
+
+nonMPA_all_2018 <- lobster_protection %>% 
+  filter(year == 2018,
+         protection == "non-MPA")
+```
