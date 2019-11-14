@@ -6,7 +6,7 @@ output: html_document
 ---
 
 ```{r setup, include = FALSE}
-knitr::opts_chunk$set(echo = TRUE,
+knitr::opts_chunk$set(echo = FALSE,
                       message = FALSE,
                       warning = FALSE)
 ```
@@ -23,7 +23,11 @@ library(DT)
 library(lubridate)
 library(ggridges)
 ```
+### Introduction 
+A short (7 - 8 sentence) introduction that helps the reader understand the purpose/motivation of the research, and previews the content of the report.
 
+### Data and Methods
+A brief ‘Data and Methods’ section (5 - 6 sentences) summarizing the data and how it was analyzed. Briefly describe the variables being studied in this report. Include the types of statistical tests performed, significance level used, and software (with version) for analysis.
 ```{r}
 #Read in lobster file + make it tidy
 
@@ -35,7 +39,12 @@ lobster_tidy <- lobster_raw %>%
   select(year:size_mm)
 ```
 
-Potential Histogram
+### Results
+#### Results A: Changes in Lobster abundance (counts) by site.
+Add a figure caption below the graph.
+
+In text (above or below the graph for Results A), describe general / interesting trends that you observe for lobster abundance at the 5 sites.
+
 ```{r}
 lobster_abund <- lobster_tidy
 
@@ -57,13 +66,13 @@ site_abundance_graph <- ggplot(lobster_abund, aes(x = year)) +
   labs(x = "Year",
        y = "Lobster Count",
        title = "Lobster Abundance Across Five Sites(Duerksen-Salm & Nolan)", 
-       subtitle = "Abundance across five studied site compared to total total lobsters counted across all sites")
+       caption = "YAY CAPTION HERE")
 ## I dont like this caption but we need to talk about what the shaded area means / if the shaded area is necessary? 
 (site_abundance_graph)
 
 ```
 
-Results B.
+#### Results B: 
 
 Visually explore lobster size distribution shifts
 Compare lobster sizes in 2012 and 2018
@@ -99,19 +108,19 @@ ggplot(lobster_size, aes(x = size_mm, y = site)) +
   theme_light()+
   labs(x = "Lobster Size (mm)",
        y = "Site",
-       title = "Change in lobster size by site")
+       title = "Change in lobster size by site", caption = "NEED CAPTION BELOW GRAPH")
 # Change in distribution of lobster size
 # Change in lobster size by site
 
 ```
 
-Make a finalized graph showing community size distributions at each site in the 2 years, allowing the reader to easily interpret distribution shifts. Add a figure caption below the graph. 
+In text, describe general / interesting trends that you see in community size structure at different sites (again, considering MPA vs. non-MPA status) for lobsters between 2012 and 2018.
 
 ---
 
 Things that really didn't work but might be useful later...
 
-```{r}
+```{r, eval = FALSE}
 ggplot(lobster_size, aes(x = size_mm)) +
   geom_histogram(aes(fill = year,
                  show.legend = FALSE)) +
@@ -123,7 +132,7 @@ ggplot(lobster_size, aes(x = size_mm)) +
   theme_light()
 ```
 
-```{r}
+```{r, eval = FALSE}
 lobster_count <- lobster_raw %>% 
   clean_names() %>%
   group_by(year)
@@ -138,7 +147,7 @@ ggplot(lobster_3a, aes(x = date, y = n))+
   facet_wrap(~site)
 ```
 
-## Results C. Compare mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018 
+#### Results C: Compare mean lobster sizes at MPA vs. non-MPA sites in 2012 and 2018 
 - MPAs: IV and Naples (establish 2012)
 
 For each year (2012 and 2018) consolidate the size observations into only two groups: MPA and non-MPA lobsters.
@@ -149,13 +158,52 @@ For each year (2012 and 2018) consolidate the size observations into only two gr
 lobster_protection <- lobster_tidy %>% 
   mutate(protection = ifelse(site %in% c("IVEE", "NAPL"), "MPA", "non-MPA")) %>% 
   filter(year == c(2012, 2018)) %>% 
-  select("year", "site", "size_mm", "protection") #%>% 
-  #group_by(year) %>% 
-  #group_by(site) %>%
-  #mutate(mean_size = mean(size_mm)) ## Need to select only the means calculated for each site at 2012 + 2018
+  select("year", "site", "size_mm", "protection")
+
+
+
+#### wrangling to summarize mean of each 4 groups 
+## ***some of these df's have no results but im too braindead to explore why, will assess tmrw
+
+# MPA 2018
+lobster_mean_MPA_2018 <- lobster_protection %>% 
+  filter(year == 2018, protection == "MPA") %>% 
+  group_by(site) %>% 
+  summarize(mean_size = mean(size_mm))
+
+#nonMPA 2018 
+lobster_mean_nonMPA_2018 <- lobster_protection %>% 
+  filter(year == 2018, protection == "nonMPA") %>% 
+  group_by(site) %>% 
+  summarize(mean_size = mean(size_mm))
+
+# MPA 2012
+lobster_mean_MPA_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "MPA") %>% 
+  group_by(site) %>% 
+  summarize(mean_size = mean(size_mm))
+
+#nonMPA 2012
+lobster_mean_nonMPA_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "nonMPA") %>% 
+  group_by(site) %>% 
+  summarize(mean_size = mean(size_mm))
 
 ```
- 
+
+```{r, eval = FALSE}
+# Creating graph to visualize MPA vs nonMPa of 2012 to 2018 
+## Trying to create a visualization of the increase mean lobster size in MPA zones from 2012--2018
+
+ggplot()+
+  geom_col(lobster_mean_MPA_2012, aes(x = site, y = mean_size))+
+  geom_col(lobster_mean_MPA_2018, aes(x = site, 
+                                      y = mean_size))
+
+```
+
 For 2012 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
 ```{r}
 MPA_2012 <- lobster_protection %>% 
@@ -167,7 +215,6 @@ nonMPA_2012 <- lobster_protection %>%
          protection == "non-MPA")
 
 protection_2012 <- t.test(MPA_2012$size_mm, nonMPA_2012$size_mm)
-protection_2012
 
 ```
 
@@ -185,11 +232,10 @@ nonMPA_2018 <- lobster_protection %>%
          protection == "non-MPA")
 
 protection_2018 <- t.test(MPA_2018$size_mm, nonMPA_2018$size_mm)
-protection_2018
 
 ```
 
-Mean size (mm) for 2018 MPA sites (`r round(MPA_2018$estimate[1],2)`) and non-MPA sites (`r round(nonMPA_2018$estimate[2],2)`) in the year differ significantly (t(`r round(protection_2018$parameter,2)`) = (`r round(protection_2018$statistic,2)`, *p* = (`r round(protection_2018$p.value,2)`).
+Mean size (mm) for 2018 MPA sites (`r round(protection_2018$estimate[1],2)`) and non-MPA sites (`r round(protection_2018$estimate[2],2)`) in the year differ significantly (t(`r round(protection_2018$parameter,2)`) = (`r round(protection_2018$statistic,2)`, *p* = (`r round(protection_2018$p.value,2)`).
 
 For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
 ```{r}
@@ -200,7 +246,13 @@ MPA_all_2012 <- lobster_protection %>%
 MPA_all_2018 <- lobster_protection %>% 
   filter(year == 2018,
          protection == "MPA")
+
+protection_MPA_all <- t.test(MPA_all_2012$size_mm, MPA_all_2018$size_mm)
+
 ```
+Mean size (mm) for 2012 MPA sites (`r round(protection_MPA_all$estimate[1],2)`) and 2018 MPA sites (`r round(protection_MPA_all$estimate[2],2)`) differ significantly (t(`r round(protection_MPA_all$parameter,2)`) = (`r round(protection_MPA_all$statistic,2)`, *p* = (`r round(protection_MPA_all$p.value,2)`).
+
+
 
 For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018? 
 ```{r}
@@ -211,4 +263,15 @@ nonMPA_all_2012 <- lobster_protection %>%
 nonMPA_all_2018 <- lobster_protection %>% 
   filter(year == 2018,
          protection == "non-MPA")
+
+protection_nonMPA_all <- t.test(nonMPA_all_2012$size_mm, nonMPA_all_2018$size_mm)
+
 ```
+Mean size (mm) for 2012 nonMPA sites (`r round(protection_nonMPA_all$estimate[1],2)`) and 2018 MPA sites (`r round(protection_nonMPA_all$estimate[2],2)`) do not differ significantly (t(`r round(protection_nonMPA_all$parameter,2)`) = (`r round(protection_nonMPA_all$statistic,2)`, *p* = (`r round(protection_nonMPA_all$p.value,2)`).
+
+```{r, eval=FALSE}
+
+datatable(protection_2012, protection_2018, protection_MPA_all, protection_nonMPA_all)
+
+```
+
