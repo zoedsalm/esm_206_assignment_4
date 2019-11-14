@@ -70,6 +70,19 @@ site_abundance_graph <- ggplot(lobster_abund, aes(x = year)) +
 ## I dont like this caption but we need to talk about what the shaded area means / if the shaded area is necessary? 
 (site_abundance_graph)
 
+ggplot(data = lobster_abund) +
+  geom_histogram(aes(x = year, fill = site, alpha = 0.7, color = site, binwidth = 10),
+                 show.legend = FALSE) +
+  facet_grid(year~site, scales = "free") +
+  theme_minimal() +
+  scale_y_continuous(expand = c(0,0)) +
+  scale_x_continuous(expand = c(0,0)) +
+  labs(title = "Lobster Size Distributions across 5 Sites",
+       caption = "Figure 2: Lobster Size for 2012 & 2018",
+       subtitle = "2012 & 2018",
+       x = "Lobster Size (mm)",
+       y = "Total Lobster Observations")
+
 ```
 
 #### Results B: 
