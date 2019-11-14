@@ -173,7 +173,7 @@ lobster_mean_MPA_2018 <- lobster_protection %>%
 
 #nonMPA 2018 
 lobster_mean_nonMPA_2018 <- lobster_protection %>% 
-  filter(year == 2018, protection == "nonMPA") %>% 
+  filter(year == 2018, protection == "non-MPA") %>% 
   group_by(site) %>% 
   summarize(mean_size = mean(size_mm))
 
@@ -187,9 +187,23 @@ lobster_mean_MPA_2012 <- lobster_protection %>%
 #nonMPA 2012
 lobster_mean_nonMPA_2012 <- lobster_protection %>% 
   filter(year == 2012,
-         protection == "nonMPA") %>% 
+         protection == "non-MPA") %>% 
   group_by(site) %>% 
   summarize(mean_size = mean(size_mm))
+
+lobster_mean_12 <- lobster_protection %>%
+  filter(year == 2012) %>% 
+  group_by(protection) %>% 
+  summarize(mean_size = mean(size_mm))
+
+lobster_mean_18 <- lobster_protection %>%
+  filter(year == 2018) %>% 
+  group_by(protection) %>% 
+  summarize(mean_size = mean(size_mm))
+
+ggplot(lobster_mean_12, aes(x = protection, y = mean_size))+
+  geom_col(lobster_mean_18, aes(x = protection, y = mean_size))
+
 
 ```
 
@@ -197,10 +211,9 @@ lobster_mean_nonMPA_2012 <- lobster_protection %>%
 # Creating graph to visualize MPA vs nonMPa of 2012 to 2018 
 ## Trying to create a visualization of the increase mean lobster size in MPA zones from 2012--2018
 
-ggplot()+
-  geom_col(lobster_mean_MPA_2012, aes(x = site, y = mean_size))+
-  geom_col(lobster_mean_MPA_2018, aes(x = site, 
-                                      y = mean_size))
+ggplot() +
+  geom_col(data = lobster_mean_12, aes(x = protection, y = mean_size), fill = "blue") +
+  geom_col(data = lobster_mean_18, aes(x = protection, y = mean_size), fill = "green")
 
 ```
 
@@ -220,6 +233,21 @@ protection_2012 <- t.test(MPA_2012$size_mm, nonMPA_2012$size_mm)
 
 Mean size (mm) for MPA sites (`r round(protection_2012$estimate[1],2)`) and non-MPA sites (`r round(protection_2012$estimate[2],2)`) in the year 2012 differ significantly (t(`r round(protection_2012$parameter,2)`) = (`r round(protection_2012$statistic,2)`, *p* = (`r round(protection_2012$p.value,2)`).
 
+```{r}
+#Representation of mean between MPA and non-MPA in 2012
+status_12 <- lobster_protection %>%
+  filter(year == 2012) %>% 
+  group_by(protection) %>% 
+  mutate(size_avg = mean(size_mm))
+
+ggplot(status_12, aes(size_mm, fill = protection))+
+  geom_density(alpha=0.2)+
+  geom_vline(aes(xintercept=size_avg,
+                 color = protection),
+             linetype = "dashed")+
+  theme_minimal()
+```
+
 
 For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
 ```{r}
@@ -236,6 +264,28 @@ protection_2018 <- t.test(MPA_2018$size_mm, nonMPA_2018$size_mm)
 ```
 
 Mean size (mm) for 2018 MPA sites (`r round(protection_2018$estimate[1],2)`) and non-MPA sites (`r round(protection_2018$estimate[2],2)`) in the year differ significantly (t(`r round(protection_2018$parameter,2)`) = (`r round(protection_2018$statistic,2)`, *p* = (`r round(protection_2018$p.value,2)`).
+
+```{r}
+#Representation of mean between MPA and non-MPA in 2018
+status_18 <- lobster_protection %>%
+  filter(year == 2018) %>%
+  group_by(protection) %>% 
+  mutate(size_avg = mean(size_mm))
+
+ggplot(status_18, aes(size_mm, fill = protection))+
+  geom_density(alpha=0.2)+
+  geom_vline(aes(xintercept=size_avg,
+                 color = protection),
+             linetype = "dashed")
+
+status_all <- lobster_protection %>% 
+  filter(year %in% c(2012:2018)) %>% 
+  group_by(year) %>% 
+  mutate(size_avg = mean(size_mm))
+
+
+```
+
 
 For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
 ```{r}
