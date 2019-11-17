@@ -61,11 +61,11 @@ lobster_abund$site <- gsub("MOHK", "Mohawk", lobster_abund$site)
 
 # Make a graph
 
-site_abundance_graph <- ggplot(lobster_abund, aes(x = year)) +
-  #geom_histogram(data = transform(lobster_abund, site = NULL), binwidth = 1, fill = "gray90") + 
+site_abundance_graph <- ggplot(lobster_abund, aes(x = year))+
   geom_histogram(binwidth = 1,
                  aes(fill = protection),
                  show.legend = FALSE) +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9"))+
   facet_wrap(~site) +
   theme_light() +
   labs(x = "Year",
@@ -77,19 +77,6 @@ site_abundance_graph
 
 ## I dont like this caption but we need to talk about what the shaded area means / if the shaded area is necessary? 
 (site_abundance_graph)
-
-ggplot(data = lobster_abund) +
-  geom_histogram(aes(x = year, fill = site, alpha = 0.7, color = site, binwidth = 10),
-                 show.legend = FALSE) +
-  facet_grid(year~site, scales = "free") +
-  theme_minimal() +
-  scale_y_continuous(expand = c(0,0)) +
-  scale_x_continuous(expand = c(0,0)) +
-  labs(title = "Lobster Size Distributions across 5 Sites",
-       caption = "Figure 2: Lobster Size for 2012 & 2018",
-       subtitle = "2012 & 2018",
-       x = "Lobster Size (mm)",
-       y = "Total Lobster Observations")
 
 ```
 
@@ -123,22 +110,13 @@ lobster_size$site <- gsub("MOHK", "Mohawk", lobster_size$site)
 
 ```{r}
 
-ggplot(lobster_size, aes(x = size_mm, y = site)) +
-  geom_density_ridges(aes(fill = site),
-                      show.legend = FALSE)+
-  facet_wrap(~year) +
-  scale_x_continuous(limits = c(30, 135),
-                     expand = c(0,0)) +
-  theme_light()+
-  labs(x = "Lobster Size (mm)",
-       y = "Site",
-       title = "Change in lobster size by site", caption = "NEED CAPTION BELOW GRAPH")
 # Change in distribution of lobster size
 # Change in lobster size by site
 
 ggplot(lobster_all, aes(x = size_mm, y = site)) +
   geom_density_ridges(aes(fill = protection),
                       show.legend = FALSE)+
+  scale_fill_manual(values = c("#E69F00", "#56B4E9")) +
   facet_wrap(~year) +
   scale_x_continuous(limits = c(30, 135),
                      expand = c(0,0)) +
@@ -146,8 +124,7 @@ ggplot(lobster_all, aes(x = size_mm, y = site)) +
   labs(x = "Lobster Size (mm)",
        y = "Site",
        title = "Change in lobster size by site", caption = "NEED CAPTION BELOW GRAPH")
-# Change in distribution of lobster size
-# Change in lobster size by site
+
 
 ```
 
@@ -231,13 +208,13 @@ lobster_mean_nonMPA_2012 <- lobster_protection %>%
 lobster_mean_12 <- lobster_protection %>%
   filter(year == 2012) %>% 
   group_by(protection) %>% 
-  summarize(mean_size = mean(size_mm))
+  summarize(mean_size = mean(size_mm),
+            )
 
 lobster_mean_18 <- lobster_protection %>%
   filter(year == 2018) %>% 
   group_by(protection) %>% 
   summarize(mean_size = mean(size_mm))
-
 
 
 ```
@@ -276,10 +253,11 @@ status_12 <- lobster_protection %>%
   mutate(size_avg = mean(size_mm))
 
 ggplot(status_12, aes(size_mm, fill = protection))+
-  geom_density(alpha=0.2)+
+  geom_density(alpha=0.3)+
   geom_vline(aes(xintercept=size_avg,
                  color = protection),
              linetype = "dashed")+
+  scale_fill_manual(values = c("#E69F00", "#56B4E9"))+
   theme_minimal()
 ```
 
@@ -318,6 +296,15 @@ status_all <- lobster_protection %>%
   group_by(year) %>% 
   mutate(size_avg = mean(size_mm))
 
+ggplot(status_all, aes(size_mm, fill = protection))+
+  geom_density(alpha=0.3) +
+  scale_x_continuous(limits = c(30,200)) +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9"))+
+  geom_vline(aes(xintercept=size_avg,
+                 color = protection),
+             linetype = "dashed") +
+  facet_wrap(~year) +
+  theme_minimal()
 
 ```
 
@@ -359,7 +346,26 @@ Mean size (mm) for 2012 nonMPA sites (`r round(protection_nonMPA_all$estimate[1]
 ```{r}
 # Creating a date frame with stats to make table
 # include: avg, std dev & sample size for MPa and nonMPA 2012 and 2018 
-MPA_stats <- ()
+mpa_stats <- lobster_protection %>%
+  group_by(year, protection) %>% 
+  summarize(
+    mean_size = round(mean(size_mm, na.rm = TRUE), 2),
+    standard_dev = round(sd(size_mm, na.rm = TRUE), 2),
+    sample_size = n())
+
+# Create a pretty table of the info!
+
+mpa_stats_table <- mpa_stats %>% 
+  kable(col.names = c("Year",
+                      "Protection Status",
+                      "Mean Lobster Size (mm)",
+                      "Standard Deviation",
+                      "Sample Size (n)")) %>% 
+  kable_styling("striped") %>% 
+  row_spec(c(1,3), color = "white", background = "#E69F00") %>%
+  row_spec(c(2,4), color = "white", background = "#56B4E9")
+
+mpa_stats_table
 
 ```
 
