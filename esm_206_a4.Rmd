@@ -22,6 +22,9 @@ library(plotly)
 library(DT)
 library(lubridate)
 library(ggridges)
+library(knitr)
+library(kableExtra)
+
 ```
 ### Introduction 
 A short (7 - 8 sentence) introduction that helps the reader understand the purpose/motivation of the research, and previews the content of the report.
@@ -338,6 +341,7 @@ Mean size (mm) for 2012 MPA sites (`r round(protection_MPA_all$estimate[1],2)`) 
 
 For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018? 
 ```{r}
+
 nonMPA_all_2012 <- lobster_protection %>% 
   filter(year == 2012,
          protection == "non-MPA")
@@ -350,7 +354,22 @@ protection_nonMPA_all <- t.test(nonMPA_all_2012$size_mm, nonMPA_all_2018$size_mm
 
 ```
 Mean size (mm) for 2012 nonMPA sites (`r round(protection_nonMPA_all$estimate[1],2)`) and 2018 MPA sites (`r round(protection_nonMPA_all$estimate[2],2)`) do not differ significantly (t(`r round(protection_nonMPA_all$parameter,2)`) = (`r round(protection_nonMPA_all$statistic,2)`, *p* = (`r round(protection_nonMPA_all$p.value,2)`).
+ 
 
+```{r}
+# Creating a date frame with stats to make table
+# include: avg, std dev & sample size for MPa and nonMPA 2012 and 2018 
+MPA_stats <- ()
+
+```
+
+
+
+
+
+## To do: 
+- get dylan's code to combine stats and make a table 
+- code for ^^ is in lab 5 ?? 
 ```{r, eval=FALSE}
 
 datatable(protection_2012, protection_2018, protection_MPA_all, protection_nonMPA_all)
