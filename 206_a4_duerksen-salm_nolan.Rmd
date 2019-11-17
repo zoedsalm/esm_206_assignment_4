@@ -66,16 +66,16 @@ lobster_abund$site <- gsub("MOHK", "Mohawk", lobster_abund$site)
 ```{r}
 # Making site abundance graph
 
-site_abundance_graph <- ggplot(lobster_abund, aes(x = year)) +
-  #geom_histogram(data = transform(lobster_abund, site = NULL), binwidth = 1, fill = "gray90") + 
+site_abundance_graph <- ggplot(lobster_abund, aes(x = year))+
   geom_histogram(binwidth = 1,
                  aes(fill = protection),
                  show.legend = FALSE) +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9"))+
   facet_wrap(~site) +
   theme_light() +
   labs(x = "Year",
        y = "Lobster Count",
-       title = "Lobster Abundance Across Five Sites(Duerksen-Salm & Nolan)", 
+       title = "Lobster Abundance Across Five Sites", 
        caption = "YAY CAPTION HERE")
 
 site_abundance_graph
@@ -125,6 +125,7 @@ size_change_by_site <- ggplot(lobster_size, aes(x = size_mm, y = site)) +
 size_dist_by_site <- ggplot(lobster_all, aes(x = size_mm, y = site)) +
   geom_density_ridges(aes(fill = protection),
                       show.legend = FALSE)+
+  scale_fill_manual(values = c("#E69F00", "#56B4E9")) +
   facet_wrap(~year) +
   scale_x_continuous(limits = c(30, 135),
                      expand = c(0,0)) +
@@ -133,7 +134,7 @@ size_dist_by_site <- ggplot(lobster_all, aes(x = size_mm, y = site)) +
        y = "Site",
        title = "Change in lobster size by site", caption = "NEED CAPTION BELOW GRAPH")
 
-
+size_dist_by_site
 ```
 
 In text, describe general / interesting trends that you see in community size structure at different sites (again, considering MPA vs. non-MPA status) for lobsters between 2012 and 2018.
@@ -202,10 +203,11 @@ status_12 <- lobster_protection %>%
   mutate(size_avg = mean(size_mm))
 
 ggplot(status_12, aes(size_mm, fill = protection))+
-  geom_density(alpha=0.2)+
+  geom_density(alpha=0.3)+
   geom_vline(aes(xintercept=size_avg,
                  color = protection),
              linetype = "dashed")+
+  scale_fill_manual(values = c("#E69F00", "#56B4E9"))+
   theme_minimal()
 
 ```
@@ -261,6 +263,15 @@ status_all <- lobster_protection %>%
   group_by(year) %>% 
   mutate(size_avg = mean(size_mm))
 
+ggplot(status_all, aes(size_mm, fill = protection))+
+  geom_density(alpha=0.3) +
+  scale_x_continuous(limits = c(30,200)) +
+  scale_fill_manual(values = c("#E69F00", "#56B4E9"))+
+  geom_vline(aes(xintercept=size_avg,
+                 color = protection),
+             linetype = "dashed") +
+  facet_wrap(~year) +
+  theme_minimal()
 ```
 
 For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
