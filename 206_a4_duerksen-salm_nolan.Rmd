@@ -62,7 +62,7 @@ lobster_tidy <- lobster_raw %>%
 ### Results
 #### A. Changes in Lobster abundance (counts) by site
 
-The implementation of MPA status on certain study sites in 2012 produced an observable difference in both lobster size and abundance (Fig. 1). Over the six-year period after MPA designation, the MPA sites - Naples and Isla Vista - exhibited an increase in the number of lobsters counted by researchers. Both sites had relatively low lobster numbers in 2012: Isla Vista was observed to have under 30, while less than 10 lobsters were found at Naples. By 2018, the Naples population had grown by almost 200 lobsters, and Isla Vista, with over 800 counted lobsters, contained highest abundance among the five sites. The non-MPA sites, Arroyo Quemada, Carpinteria, and Mohawk, show varying lobster abundance over the six-year period. Mohawk shows a decrease in abundance after the highest count at the site in 2014. This steady decline in abundance may be due to overharvesting during the peak abundance year and the lobster populations have been unable to recover.
+The implementation of MPA status on certain study sites in 2012 yielded an observable difference in both lobster size and abundance (Fig. 1). Over the six-year period after MPA designation, the MPA sites - Naples and Isla Vista - exhibited an increase in the number of lobsters counted by researchers. Both sites had relatively low lobster numbers in 2012: Isla Vista was observed to have under 30, while less than 10 lobsters were found at Naples. By 2018, the Naples population had grown by almost 200 lobsters, and Isla Vista, with over 800 counted lobsters, contained highest abundance among the five sites. The non-MPA sites, Arroyo Quemada, Carpinteria, and Mohawk, show varying lobster abundance over the six-year period. Mohawk shows a decrease in abundance after the highest count at the site in 2014. This steady decline in abundance may be due to overharvesting during the peak abundance year and the lobster populations have been unable to recover.
 
 ```{r}
 # creating dataframe labeling MPA vs nonMPA
@@ -94,7 +94,7 @@ site_abundance_graph <- ggplot(lobster_abund, aes(x = year))+
   labs(x = "Year",
        y = "Lobster Count (n)",
        title = "Figure 1: Lobster Abundance Across Five Sites", 
-       caption = "Figure 1 depicts the lobster abundance at each of the five sites.)
+       caption = "Figure 1 depicts the lobster abundance at each of the five sites.")
 
 site_abundance_graph
 
@@ -293,9 +293,9 @@ nonMPA_all_2018 <- lobster_protection %>%
 protection_nonMPA_all <- t.test(nonMPA_all_2012$size_mm, nonMPA_all_2018$size_mm)
 ```
 
-Non-MPA sites have not experience any change in terms of regulation. This is demonstrated by only a slight decrease in lobster size and a low increase in sample size compared to that of MPA sites. A decrease in mean lobster size of 1.96mm is shown in Table 1. Figure 3 depicts less variance from the mean lobster size at non-MPA sites in 2018. Mean size (mm) for 2012 nonMPA sites (`r round(protection_nonMPA_all$estimate[1],2)`) and 2018 non-MPA sites (`r round(protection_nonMPA_all$estimate[2],2)`) do not differ significantly (t(`r round(protection_nonMPA_all$parameter,2)`) = (`r round(protection_nonMPA_all$statistic,2)`, *p* = (`r round(protection_nonMPA_all$p.value,2)`).
+Non-MPA sites have not experience any change in terms of regulation. This is demonstrated by only a slight decrease in lobster size and a low increase in sample size compared to that of MPA sites. A decrease in mean lobster size of 1.96mm is shown in Table 1. Figure 3 depicts less variance from the mean lobster size at non-MPA sites in 2018. Mean size (mm) for 2012 non-MPA sites (`r round(protection_nonMPA_all$estimate[1],2)`) and 2018 non-MPA sites (`r round(protection_nonMPA_all$estimate[2],2)`) do not differ significantly (t(`r round(protection_nonMPA_all$parameter,2)`) = (`r round(protection_nonMPA_all$statistic,2)`, *p* = (`r round(protection_nonMPA_all$p.value,2)`).
 
-The data indicates that the designation of MPA sites allowed for the succesfull reestablishment of lobster populations at protected sites in the six years following implemented regulations. The lack of change among non-MPA sites confirms the beneficial impacts of regulation on areas inhabiting vulnerable species. Figure 3 highlights the potential improvement that can arise from MPA status. At MPA sites there is a general trend in distribution moving towards larger lobster size and an increase in population size. As a result of static conditions at non-MPA sites, the mean lobster size at MPA sites surpassed that of the unprotected non-MPA sites.
+The data indicates that the designation of MPA sites allowed for the successfull reestablishment of lobster populations at protected sites in the six years following implemented regulations. The lack of change among non-MPA sites confirms the beneficial impacts of regulation on areas containing vulnerable species. Figure 3 highlights the potential improvement that can arise from MPA status. At MPA sites there is a general trend in distribution moving towards larger lobster size and an increase in population size. As a result of static conditions at non-MPA sites, the mean lobster size at MPA sites surpassed that of the unprotected non-MPA sites.
 
 ```{r}
 # Representation of mean between MPA and non-MPA in 2018.
@@ -326,7 +326,7 @@ lobster_distrib
 
 ### Summary
 
-Sites that remained non-MPA status exhibited little change in lobster conditions. From 2012 to 2018,  non-MPA sites remained stagnant with neglegent differences in mean lobster size and sample size, as indicated by Table 1. 
+Sites that remained non-MPA status exhibited little change in lobster conditions. From 2012 to 2018,  non-MPA sites remained stagnant with negligent differences in mean lobster size and sample size, as indicated by Table 1. 
 
 The designation of MPA sites in 2012 allowed for a significant increase in lobster abundance in protected areas. The steady growth of lobster populations within MPA sites is depicted in Figure 1.
 
@@ -339,8 +339,8 @@ A lack of change in lobster abundance and size at non-MPA sites constrasted by s
 ### References: 
 1. Reed D. 2019. SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interrupts), ongoing since 2012. Environmental Data Initiative. https://doi.org/10.6073/pasta/a593a675d644fdefb736750b291579a0. Dataset accessed 11/14/2019.
 
-2. “Panulirus Interruptus.” *Zooplankton Guide*, Scripps Oceanography, www.scripps.ucsd.edu/zooplanktonguide/species/panulirus-interruptus.
+2. “Panulirus Interruptus.” *Zooplankton Guide*, Scripps Oceanography, https://www.scripps.ucsd.edu/zooplanktonguide/species/panulirus-interruptus.
 
-3. “California Marine Protected Areas (MPAs).” California Marine Protected Areas (MPAs), California Department of Fish and Wildlife, 2019, www.wildlife.ca.gov/Conservation/Marine/MPAs.
+3. “California Marine Protected Areas (MPAs).” California Marine Protected Areas (MPAs), California Department of Fish and Wildlife, 2019, https://www.wildlife.ca.gov/Conservation/Marine/MPAs.
 
 4. "Panulirus interruptus; California Spiny Lobster." CalPhotos, University of California, Berkeley, 1999, https://calphotos.berkeley.edu/cgi/img_query?enlarge=9092+3191+3541+0006
