@@ -1,16 +1,9 @@
 ---
-title: "California Spiny Lobster Abundance"
+title: "Impact of Protection Status on California Spiny Lobster"
 author: "Zoe Duerksen-Salm and Audrey Nolan"
 date: "11/18/2019"
 output: html_document
 ---
-Thoughts: 
-
-- maybe title something like "Impact of Protection Status on California Spiny Lobster Abundance" ?
-- move all of the figure caption/blurbs to before the graphs. Allison did this in her example report and i like the look of it. 
-- How do we find a proper citation? I only found DOI. Do we need to include date data retrieved etc? **Under tables and graphs we could have a "source:" link that takes you to the original data source**
-- for discussion of results from section C, do we want to remove the questions and just make a separate paragraph for each test, then talk about the main graph? Orrrrr talk about the main graph, and throw in the specific statitic values through the discussion. 
-
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = FALSE,
@@ -27,24 +20,23 @@ library(lubridate)
 library(ggridges)
 library(knitr)
 library(kableExtra)
-
 ```
-
-### Introduction 
-A short (7 - 8 sentence) introduction that helps the reader understand the purpose/motivation of the research, and previews the content of the report.
-
-This report explores California Spiny Lobster, *Panulirus interruptus*, populations from 2012-2018 at five sites off the coast of Santa Barbara, California. Spiny lobsters play a key role in the **[maintenance and health]** of giant kelp forests. Foraging on algae, snails, crabs, and sea urchins, spiny lobsters help **[manage kelp predator populations]**, thus sustaining a **[healthy, long-living population of kelp]**. The data - derived from **[]** - analyzes five study sites in the Santa Barbara area. Two of the sites, Naples and Isla Vista, became marine protected areas (MPA) in 2012. Under the Marine Life Protection Act, MPAs aim to preserve the diversity and abundance of marine life, the habitats they depend on, and the integrity of marine ecosystems(Cal Department of Fish and Wildlife). MPAs allow for.... 
-
-### Data and Methods
-A brief ‘Data and Methods’ section (5 - 6 sentences) summarizing the data and how it was analyzed. Briefly describe the variables being studied in this report. Include the types of statistical tests performed, significance level used, and software (with version) for analysis.
 
 ---
 
-The data used for this report was obtained by reasearchers with Santa Barbara Coastal Long Term Ecological Research(SBC LTER) that began sampling in 2012 and **[remains]** ongoing. Lobster counts and lobster size (mm) are recorded by divers in four 300m^2 lobster transects. This data is collected annually in late summer at each of the five sites along the coast of the Santa Barbara Channel. Lobster size and abundance are two main varibles assessed within this report. 
+### Introduction 
 
-Statistical tests were performed on the data including a Whelch Two Sample t-test with a significance level of p = 0.05. All statistical analyses and figures were prepared using R software version 3.6.1.
+The California spiny lobster (*Panulirus interruptus*) plays a key role in the maintaining the health of giant kelp forests. Foraging on algae, snails, crabs, and sea urchins, spiny lobsters help regulate species that prey on kelp, in turn sustaining the longevity of kelp forest ecosystems^[1](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-sbc&identifier=77&revision=newest)^. The wild distribution of the spiny lobster ranges from the coast of Santa Barbara, California to the Gulf of Tehuantepec, Mexico^[2](https://scripps.ucsd.edu/zooplanktonguide/species/panulirus-interruptus)^. Unfortunately, spiny lobster populations are threatened by fishing pressure, which ultimately inhibits their ability to grow, both in population size and individual lobster length. In 2012, two sites along the coast of Santa Barbara - Naples and Isla Vista - were established as marine protected areas (MPAs) to protect the spiny lobster populations. Under the Marine Life Protection Act, MPAs aim to preserve the biodiversity of marine life, the ecompassed habitats, and the natural aspects of marine ecosystems^[3](https://www.wildlife.ca.gov/Conservation/Marine/MPAs)^.
 
-doi:10.6073/pasta/a593a675d644fdefb736750b291579a0
+---
+
+### Data and Methods
+
+The spiny lobster abundance and size data was obtained by the Santa Barbara Coastal Long Term Ecological Research (SBC LTER). In 2012, researchers at the SBC LTER began collecting data on spiny lobster populations at five sites off of the coast of Santa Barbara. Sampling data includes abundance, size, and fishing pressure. Lobster counts and lobster size (mm) were recorded by divers in four 300m^2 lobster transects. This data is collected annually in late summer at each of the five sites along the coast of the Santa Barbara Channel^[1](https://portal.edirepository.org/nis/mapbrowse?scope=knb-lter-sbc&identifier=77&revision=newest)^. Lobster size and abundance are two main varibles assessed within this report. 
+
+Spiny lobster abundance and size across all five sites, discerning between MPA protection status, was visually analyzed via histograms and distribution plots. Statistical tests were performed on the data including a Whelch Two Sample t-test with a significance level of p = 0.05. All statistical analyses and figures were prepared using R software version 3.6.1.
+
+MPA sites established in 2012 - Isla Vista and Naples - are represented by orange coloration in all figures throughout this report. Non-MPA sites - Arroyo Quemado, Carpinteria, Mohawk - are indicated with blue coloration.
 
 ```{r}
 #Read in lobster file + make it tidy
@@ -55,24 +47,12 @@ lobster_tidy <- lobster_raw %>%
   clean_names() %>%
   tidyr::uncount(count) %>% 
   select(year:size_mm)
-
-
-
 ```
 
+---
+
 ### Results
-
-Prepare finalized data visualizations and perform statistical analyses (as indicated) to do the following. You are expected to also add useful text that weaves the pieces together into a cohesive Results section (i.e., this should not just be a series of figures and without useful description & text flow between them). 
-
----
-
-MPA sites established in 2012 - Isla Vista and Naples - are represented by orange coloration in all figures throughout this report. Non-MPA sites - Arroyo Quemado, Carpinteria, Mohawk - are indicated with blue coloration.
-
-**[should this be in the methods section?]**
-
----
-
-#### A: Changes in Lobster abundance (counts) by site.
+#### A. Changes in Lobster abundance (counts) by site.
 
 The implementation of MPA status on certain study sites in 2012 produced an observable difference in both lobster size and abundance (Fig. 1). Over the six-year period post MPA **[implementation]**, the MPA sites - Naples and Isla Vista - **[exhibited]** an increase in the number of lobsters counted by researchers. Both sites had relatively low lobster numbers in 2012: Isla Vista was observed to have under 30, while less than 10 lobsters were found at Naples. By 2018, the Naples population had grown by almost 200 lobsters, and Isla Vista, with over 800 counted lobsters, contained highest abundance among the five sites. The non-MPA sites, Arroyo Quemada, Carpinteria, and Mohawk, show varying lobster abundance over the six-year period. Mohawk shows a decrease in abundance after the highest count at the site in 2014. This steady decline in abundance may be due to overharvesting during the peak abundance year and the lobster populations have **[struggled]** to recover.
 
@@ -114,7 +94,7 @@ site_abundance_graph
 
 ---
 
-#### B: Differences in lobster size distribution from 2012 to 2018
+#### B. Differences in lobster size distribution from 2012 to 2018
 
 In 2012 when Naples and Isla Vista were designated as MPAs, the sites exhibited a relatively smaller distribution of lobster size. However, data from 2018 indicates that the populations at MPA sites shifted towards larger lobsters. Non-MPA sites show minimal change in the distrubution of lobster sizes over the six-year period. In fact, by 2018 the average lobster size at Naples and Isla Vista were 7.5% and 10.6% higher than in 2012 respectively. In comparison, mean lobster size at non-MPA only increased by 0.1-0.6% during the six-year-period. Figure 2 represents the shifts in the distribution of lobster size. The peaks indicate large quantities of small lobsters at MPA sites in 2012 as opposed to more sizable counts of larger lobsters at the same sites in 2018. In accordance with numerical results, the visual distributions of lobster size at non-MPA sites shows little variance between the two years. An increase in lobster size can be attributed to the **[designation]** of this area as an MPA, allowing for lobsters to mature without being harvested.
 
@@ -164,9 +144,7 @@ size_dist_by_site
 
 ---
 
-#### C: Comparing mean lobster size at MPA vs. non-MPA sites in 2012 and 2018 
-
-In text in your report, describe the outcome of the statistical hypothesis tests using in-line referencing (e.g. do not copy and paste values from the output). Remember: the p-value is not enough. You should also describe more meaningful metrics for comparison. Here are some things you might consider including in your description: the actual differences in mean size between groups, % changes, measure of uncertainty (e.g. confidence interval), etc.
+#### C. Comparing mean lobster size at MPA vs. non-MPA sites in 2012 and 2018 
 
 ```{r}
 # For each year (2012 and 2018) consolidate the size observations into only two groups: MPA and non-MPA lobsters.
@@ -222,7 +200,33 @@ lobster_mean_18 <- lobster_protection %>%
 
 
 ```{r}
-# Creating data frames to test for a significant difference in lobster size between MPA and non-MPA sites
+# Creating a date frame with stats to make table
+# include: avg, std dev & sample size for MPa and nonMPA 2012 and 2018 
+mpa_stats <- lobster_protection %>%
+  group_by(year, protection) %>% 
+  summarize(
+    mean_size = round(mean(size_mm, na.rm = TRUE), 2),
+    standard_dev = round(sd(size_mm, na.rm = TRUE), 2),
+    sample_size = n())
+
+# Create a finalized table (static) that includes means, standard deviations, and sample sizes for the two groups (MPA and non-MPA sites) in 2012 and 2018. Add a caption above the table.
+
+mpa_stats_table <- mpa_stats %>% 
+  kable(col.names = c("Year",
+                      "Protection Status",
+                      "Mean Lobster Size (mm)",
+                      "Standard Deviation",
+                      "Sample Size (n)"),
+        caption = "Table 1. Summary statistics for MPA and non-MPA sites in 2012 and 2018. The table shows year, protection status, mean lobster size (mm), standard deviation, and sample size (n).") %>% 
+  kable_styling("striped") %>% 
+  row_spec(c(1,3), color = "white", background = "#E69F00") %>%
+  row_spec(c(2,4), color = "white", background = "#56B4E9")
+
+mpa_stats_table
+```
+
+```{r}
+# Creating data frames to test for a significant difference in lobster size between MPA and non-MPA sites in 2012.
 MPA_2012 <- lobster_protection %>% 
   filter(year == 2012,
          protection == "MPA")
@@ -232,13 +236,12 @@ nonMPA_2012 <- lobster_protection %>%
          protection == "non-MPA")
 
 protection_2012 <- t.test(MPA_2012$size_mm, nonMPA_2012$size_mm)
-
 ```
-Mean size (mm) for MPA sites (`r round(protection_2012$estimate[1],2)`) and non-MPA sites (`r round(protection_2012$estimate[2],2)`) in the year 2012 differ significantly (t(`r round(protection_2012$parameter,2)`) = (`r round(protection_2012$statistic,2)`, *p* = (`r round(protection_2012$p.value,2)`).
 
+There was a significant difference in mean lobster size between MPA and non-MPA sites in the year 2012. Table 1 shows a mean lobster size that is 10.18 mm greater at non-MPA sites and a slightly higher standard deviation, indicating larger lobsters at these sites. However, a much smaller number of lobsters were observed at recently designated MPA sites, which could result in a misrepresentation of the population mean and variance. Figure 3 depicts a smaller mean and a bi-modal distribution containing smaller sized lobsters at MPA sites in 2012.  Mean size (mm) for MPA sites (`r round(protection_2012$estimate[1],2)`) and non-MPA sites (`r round(protection_2012$estimate[2],2)`) in the year 2012 differ significantly (t(`r round(protection_2012$parameter,2)`) = (`r round(protection_2012$statistic,2)`, *p* = (`r round(protection_2012$p.value,3)`)).
 
 ```{r}
-# Creating data frames to test for a significant difference in lobster size between MPA and non-MPA sites
+# Creating data frames to test for a significant difference in lobster size between MPA and non-MPA sites in 2018.
 
 MPA_2018 <- lobster_protection %>% 
   filter(year == 2018, 
@@ -249,13 +252,48 @@ nonMPA_2018 <- lobster_protection %>%
          protection == "non-MPA")
 
 protection_2018 <- t.test(MPA_2018$size_mm, nonMPA_2018$size_mm)
-
-
 ```
-Mean size (mm) for 2018 MPA sites (`r round(protection_2018$estimate[1],2)`) and non-MPA sites (`r round(protection_2018$estimate[2],2)`) in the year differ significantly (t(`r round(protection_2018$parameter,2)`) = (`r round(protection_2018$statistic,2)`, *p* = (`r round(protection_2018$p.value,2)`).
+
+Mean lobster size at MPA sites had surpased that of non-MPA by 2018. Table 1 describes a 3.88mm larger means lobster size at MPA sites compared to non-MPA sites. Six-years post designation of the two MPA sites, observations were collected from sufficiently large sample sizes. Sufficent sample size results in lower variance between samples, ultimately allowing for less uncertainty in the data statistics. Figure 3 shows the higher mean lobster size at MPA sites and right-skewed distribution due to a higher number of larger sized lobsters. Mean size (mm) for 2018 MPA sites (`r round(protection_2018$estimate[1],2)`) and non-MPA sites (`r round(protection_2018$estimate[2],2)`) in the year differ significantly (t(`r round(protection_2018$parameter,2)`) = (`r round(protection_2018$statistic,2)`, *p* = (`r round(protection_2018$p.value,7)`)).
 
 ```{r}
-#Representation of mean between MPA and non-MPA in 2018
+# Creating data frames to test for a significant difference in lobster size at MPA sites between the years 2012 and 2018.
+
+MPA_all_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "MPA")
+
+MPA_all_2018 <- lobster_protection %>% 
+  filter(year == 2018,
+         protection == "MPA")
+
+protection_MPA_all <- t.test(MPA_all_2012$size_mm, MPA_all_2018$size_mm)
+```
+
+In 2012, MPA sites were newly established and thus the data from this collection is indicative of conditions prior to protection. By 2018, lobsters at MPA sites had been under protection for six years. This time allowed for an increase in mean lobster size and abundance. Table 1 displays a 12.1mm increase in mean size (from 65.69mm to 77.79mm), and 607 more lobsters observed. Figure 3 depicts this increase in MPA mean lobster size and the corresponding shift in distribution toward larger lobsters. Mean size (mm) for 2012 MPA sites (`r round(protection_MPA_all$estimate[1],2)`) and 2018 MPA sites (`r round(protection_MPA_all$estimate[2],2)`) differ significantly (t(`r round(protection_MPA_all$parameter,2)`) = (`r round(protection_MPA_all$statistic,2)`, *p* = (`r round(protection_MPA_all$p.value,4)`).
+
+```{r}
+
+nonMPA_all_2012 <- lobster_protection %>% 
+  filter(year == 2012,
+         protection == "non-MPA")
+
+nonMPA_all_2018 <- lobster_protection %>% 
+  filter(year == 2018,
+         protection == "non-MPA")
+
+protection_nonMPA_all <- t.test(nonMPA_all_2012$size_mm, nonMPA_all_2018$size_mm)
+```
+
+Non-MPA sites have not experience any change in terms of regulation. This is demonstrated by only a slight decrease in lobster size and a low increase in sample size compared to that of MPA sites. A decrease in mean lobster size of 1.96mm is shown in Table 1. Figure 3 depicts less variance from the mean lobster size at non-MPA sites in 2018. Mean size (mm) for 2012 nonMPA sites (`r round(protection_nonMPA_all$estimate[1],2)`) and 2018 non-MPA sites (`r round(protection_nonMPA_all$estimate[2],2)`) do not differ significantly (t(`r round(protection_nonMPA_all$parameter,2)`) = (`r round(protection_nonMPA_all$statistic,2)`, *p* = (`r round(protection_nonMPA_all$p.value,2)`).
+
+
+
+
+
+#graph of distributions
+```{r}
+# Representation of mean between MPA and non-MPA in 2018.
 
 status_all <- lobster_protection %>% 
   filter(year %in% c(2012:2018)) %>% 
@@ -277,90 +315,16 @@ ggplot(status_all, aes(size_mm, fill = protection))+
   theme_minimal()
 ```
 
-For 2018 observations, is there a significant difference in lobster size between MPA and non-MPA sites? 
-```{r}
-
-MPA_2018 <- lobster_protection %>% 
-  filter(year == 2018, 
-         protection == "MPA")
-
-nonMPA_2018 <- lobster_protection %>% 
-  filter(year == 2018, 
-         protection == "non-MPA")
-
-protection_2018 <- t.test(MPA_2018$size_mm, nonMPA_2018$size_mm)
 
 
-```
-Mean size (mm) for 2018 MPA sites (`r round(protection_2018$estimate[1],2)`) and non-MPA sites (`r round(protection_2018$estimate[2],2)`) in the year differ significantly (t(`r round(protection_2018$parameter,2)`) = (`r round(protection_2018$statistic,2)`, *p* = (`r round(protection_2018$p.value,2)`).
-
-For MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018?
-```{r}
-
-MPA_all_2012 <- lobster_protection %>% 
-  filter(year == 2012,
-         protection == "MPA")
-
-MPA_all_2018 <- lobster_protection %>% 
-  filter(year == 2018,
-         protection == "MPA")
-
-protection_MPA_all <- t.test(MPA_all_2012$size_mm, MPA_all_2018$size_mm)
-
-```
-Mean size (mm) for 2012 MPA sites (`r round(protection_MPA_all$estimate[1],2)`) and 2018 MPA sites (`r round(protection_MPA_all$estimate[2],2)`) differ significantly (t(`r round(protection_MPA_all$parameter,2)`) = (`r round(protection_MPA_all$statistic,2)`, *p* = (`r round(protection_MPA_all$p.value,2)`).
-
-
-For non-MPA sites only, is there a significant difference in lobsters observed in 2012 vs. 2018? 
-```{r}
-
-nonMPA_all_2012 <- lobster_protection %>% 
-  filter(year == 2012,
-         protection == "non-MPA")
-
-nonMPA_all_2018 <- lobster_protection %>% 
-  filter(year == 2018,
-         protection == "non-MPA")
-
-protection_nonMPA_all <- t.test(nonMPA_all_2012$size_mm, nonMPA_all_2018$size_mm)
-
-```
-Mean size (mm) for 2012 nonMPA sites (`r round(protection_nonMPA_all$estimate[1],2)`) and 2018 MPA sites (`r round(protection_nonMPA_all$estimate[2],2)`) do not differ significantly (t(`r round(protection_nonMPA_all$parameter,2)`) = (`r round(protection_nonMPA_all$statistic,2)`, *p* = (`r round(protection_nonMPA_all$p.value,2)`).
-
-
-
-```{r}
-# Creating a date frame with stats to make table
-# include: avg, std dev & sample size for MPa and nonMPA 2012 and 2018 
-mpa_stats <- lobster_protection %>%
-  group_by(year, protection) %>% 
-  summarize(
-    mean_size = round(mean(size_mm, na.rm = TRUE), 2),
-    standard_dev = round(sd(size_mm, na.rm = TRUE), 2),
-    sample_size = n())
-
-# Create a pretty table of the info!
-
-mpa_stats_table <- mpa_stats %>% 
-  kable(col.names = c("Year",
-                      "Protection Status",
-                      "Mean Lobster Size (mm)",
-                      "Standard Deviation",
-                      "Sample Size (n)")) %>% 
-  kable_styling("striped") %>% 
-  row_spec(c(1,3), color = "white", background = "#E69F00") %>%
-  row_spec(c(2,4), color = "white", background = "#56B4E9")
-
-mpa_stats_table
-
-```
 
 ### Summary
 
 A brief summary of the major findings (pick 3 - 4) from your mini-report. A bullet-pointed list is fine, but the findings should be well-written, responsible (don’t overstate your findings), and refer to outcomes (e.g. figures, tables) in the Results section
 
 ### References: 
-https://www.wildlife.ca.gov/Conservation/Marine/MPAs
+1. Reed D. 2019. SBC LTER: Reef: Abundance, size and fishing effort for California Spiny Lobster (Panulirus interrupts), ongoing since 2012. Environmental Data Initiative. https://doi.org/10.6073/pasta/a593a675d644fdefb736750b291579a0. Dataset accessed 11/14/2019.
 
+2. “Panulirus Interruptus.” *Zooplankton Guide*, Scripps Oceanography, www.scripps.ucsd.edu/zooplanktonguide/species/panulirus-interruptus.
 
-
+3. “California Marine Protected Areas (MPAs).” California Marine Protected Areas (MPAs), California Department of Fish and Wildlife, 2019, www.wildlife.ca.gov/Conservation/Marine/MPAs.
